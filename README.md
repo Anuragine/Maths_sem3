@@ -1,17 +1,3 @@
-# Maths_sem3
-Perfect 👍 Got it. I’ll make a **long, well-structured README** that you can just **copy-paste directly into GitHub**.
-It will include:
-
-* **Introduction & Motivation**
-* **Denoising techniques (constrained optimization, ISTA, FISTA, ADMM, wavelet thresholding)** with equations
-* **Edge detection & sharpening kernels** with equations and functions
-* **How they fit together** (pipeline)
-* **How to run** instructions
-* **Future scope**
-
-Here’s the full content:
-
----
 
 # 🧮 Denoising and Edge Preservation in Medical Images
 
@@ -42,27 +28,27 @@ The workflow:
 
 The noisy image can be modeled as:
 
-[
+$$
 y = x + n
-]
+$$
 
-where
+where:
 
-* (y) = observed noisy image
-* (x) = true clean image
-* (n) = noise
+* ( y ) = observed noisy image
+* ( x ) = true clean image
+* ( n ) = noise
 
-We want to recover (x) from (y).
+We want to recover ( x ) from ( y ).
 
 This can be framed as an optimization problem:
 
-[
+$$
 \min_x ; \frac{1}{2} |y - x|_2^2 + \lambda R(x)
-]
+$$
 
 * First term = **data fidelity** (keep close to observed image)
 * Second term = **regularization** (penalize noise, enforce smoothness or sparsity)
-* (R(x)) can be Total Variation (TV), (L_1)-norm in wavelet domain, etc.
+* ( R(x) ) can be Total Variation (TV), or ( L_1 )-norm in wavelet domain.
 
 ---
 
@@ -70,14 +56,14 @@ This can be framed as an optimization problem:
 
 ISTA solves the optimization via iterative updates:
 
-[
+$$
 x^{k+1} = S_{\lambda/L} \Big( x^k - \frac{1}{L} \nabla f(x^k) \Big)
-]
+$$
 
-where
+where:
 
-* (S_{\theta}(z) = \text{sign}(z) \cdot \max(|z| - \theta, 0)) (soft-thresholding)
-* (L) = Lipschitz constant of gradient
+* ( S_{\theta}(z) = \text{sign}(z) \cdot \max(|z| - \theta, 0) ) (**soft-thresholding**)
+* ( L ) = Lipschitz constant of gradient
 
 ---
 
@@ -85,12 +71,12 @@ where
 
 FISTA accelerates ISTA using momentum:
 
-[
+$$
 \begin{aligned}
 y^k &= x^k + \frac{t_{k-1}-1}{t_k} (x^k - x^{k-1}) \
 x^{k+1} &= S_{\lambda/L} \Big( y^k - \frac{1}{L} \nabla f(y^k) \Big)
 \end{aligned}
-]
+$$
 
 This converges much faster than ISTA.
 
@@ -100,44 +86,45 @@ This converges much faster than ISTA.
 
 ADMM solves constrained problems of the form:
 
-[
+$$
 \min_{x,z} ; f(x) + g(z) \quad \text{s.t.} \quad Ax + Bz = c
-]
+$$
 
-Augmented Lagrangian:
+**Augmented Lagrangian:**
 
-[
+$$
 L(x,z,u) = f(x) + g(z) + u^T(Ax+Bz-c) + \frac{\rho}{2}|Ax+Bz-c|_2^2
-]
+$$
 
-Update steps alternate between (x), (z), and dual variable (u).
-Used in **Total Variation (TV) denoising**.
+Update steps alternate between ( x ), ( z ), and dual variable ( u ).
+This is widely used in **Total Variation (TV) denoising**.
 
 ---
 
 ### 5. Wavelet Thresholding
 
-Wavelet transform separates image into frequency bands.
+Wavelet transform separates image into frequency bands:
 
 * Noise → high-frequency
 * Structure → low-frequency
 
 Thresholding rule:
 
-* **Hard thresholding:**
+**Hard thresholding:**
 
-[
-w' = \begin{cases}
+$$
+w' =
+\begin{cases}
 w & |w| \geq \lambda \
 0 & |w| < \lambda
 \end{cases}
-]
+$$
 
-* **Soft thresholding:**
+**Soft thresholding:**
 
-[
+$$
 w' = \text{sign}(w) \cdot \max(|w| - \lambda, 0)
-]
+$$
 
 Reconstruct using inverse wavelet transform to get denoised image.
 
@@ -153,18 +140,21 @@ After denoising, edges must be preserved. Convolution kernels are applied to hig
 
 Emphasizes horizontal/vertical edges.
 
-[
-K_x = \begin{bmatrix}
+$$
+K_x =
+\begin{bmatrix}
 -1 & 0 & 1 \
 -2 & 0 & 2 \
 -1 & 0 & 1
-\end{bmatrix}, \quad
-K_y = \begin{bmatrix}
+\end{bmatrix},
+\quad
+K_y =
+\begin{bmatrix}
 -1 & -2 & -1 \
 0 & 0 & 0 \
 1 & 2 & 1
 \end{bmatrix}
-]
+$$
 
 ---
 
@@ -172,18 +162,21 @@ K_y = \begin{bmatrix}
 
 Similar to Sobel, but equal weights.
 
-[
-K_x = \begin{bmatrix}
+$$
+K_x =
+\begin{bmatrix}
 -1 & 0 & 1 \
 -1 & 0 & 1 \
 -1 & 0 & 1
-\end{bmatrix}, \quad
-K_y = \begin{bmatrix}
+\end{bmatrix},
+\quad
+K_y =
+\begin{bmatrix}
 1 & 1 & 1 \
 0 & 0 & 0 \
 -1 & -1 & -1
 \end{bmatrix}
-]
+$$
 
 ---
 
@@ -191,16 +184,19 @@ K_y = \begin{bmatrix}
 
 Detects diagonal edges.
 
-[
-K_x = \begin{bmatrix}
+$$
+K_x =
+\begin{bmatrix}
 1 & 0 \
 0 & -1
-\end{bmatrix}, \quad
-K_y = \begin{bmatrix}
+\end{bmatrix},
+\quad
+K_y =
+\begin{bmatrix}
 0 & 1 \
 -1 & 0
 \end{bmatrix}
-]
+$$
 
 ---
 
@@ -208,18 +204,21 @@ K_y = \begin{bmatrix}
 
 Improved rotational symmetry compared to Sobel.
 
-[
-K_x = \begin{bmatrix}
+$$
+K_x =
+\begin{bmatrix}
 -3 & 0 & 3 \
 -10 & 0 & 10 \
 -3 & 0 & 3
-\end{bmatrix}, \quad
-K_y = \begin{bmatrix}
+\end{bmatrix},
+\quad
+K_y =
+\begin{bmatrix}
 -3 & -10 & -3 \
 0 & 0 & 0 \
 3 & 10 & 3
 \end{bmatrix}
-]
+$$
 
 ---
 
@@ -227,13 +226,14 @@ K_y = \begin{bmatrix}
 
 Second derivative, isotropic edge detection.
 
-[
-K = \begin{bmatrix}
+$$
+K =
+\begin{bmatrix}
 0 & -1 & 0 \
 -1 & 4 & -1 \
 0 & -1 & 0
 \end{bmatrix}
-]
+$$
 
 Variants:
 
@@ -247,9 +247,9 @@ Variants:
 
 Smooths image before edge detection.
 
-[
+$$
 G(x,y) = \frac{1}{2\pi\sigma^2} e^{-\frac{x^2+y^2}{2\sigma^2}}
-]
+$$
 
 ---
 
@@ -263,14 +263,14 @@ Higher-order Laplacian operator. Useful for strong edge emphasis.
 
 Edge-preserving smoothing.
 
-[
+$$
 I'(x) = \frac{1}{W_p} \sum_{y \in \Omega} I(y) \cdot f_s(|x-y|) \cdot f_r(|I(x)-I(y)|)
-]
+$$
 
-where
+where:
 
-* (f_s) = spatial closeness
-* (f_r) = intensity similarity
+* ( f_s ) = spatial closeness
+* ( f_r ) = intensity similarity
 
 ---
 
@@ -278,13 +278,14 @@ where
 
 Enhances edges:
 
-[
-K = \begin{bmatrix}
+$$
+K =
+\begin{bmatrix}
 0 & -1 & 0 \
 -1 & 5 & -1 \
 0 & -1 & 0
 \end{bmatrix}
-]
+$$
 
 ---
 
@@ -292,18 +293,17 @@ K = \begin{bmatrix}
 
 1. Clone repo:
 
-   ```bash
-   git clone https://github.com/yourusername/denoising-edge-preservation.git
-   cd denoising-edge-preservation
-   ```
+```bash
+git clone https://github.com/yourusername/denoising-edge-preservation.git
+cd denoising-edge-preservation
+```
 
 2. Place your input image in the project folder.
-
 3. Run any script:
 
-   ```bash
-   python sobel_horizontal_edge.py
-   ```
+```bash
+python sobel_horizontal_edge.py
+```
 
 4. Outputs will be saved as images (e.g., `output.png`).
 
@@ -327,4 +327,3 @@ K = \begin{bmatrix}
 * Explore **non-convolution ML/DL approaches** (SVM edge classifiers, CNN-based edge detectors).
 * Compare runtime and accuracy across all methods.
 
----
