@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 
 kernel = np.array([[-1, 0, 1],
-                   [-2, 0, -2],
+                   [-2, 0, 2],
                    [-1, 0, 1]], dtype=np.float32)  # Sharpen kernel
 
 # Read image (grayscale for edge detection/sharpening)

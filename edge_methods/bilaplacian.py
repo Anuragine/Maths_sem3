@@ -1,11 +1,11 @@
 import cv2
 import numpy as np
 
-kernel = np.array([[0,0, -1, 0,0],
-                   [0,2, 8, 2,0],
-                   [-1,8,-24,8, -1],
-                   [0,2, 8, 2,0],
-                   [0,0, -1, 0,0]], dtype=np.float32)  # Sharpen kernel
+kernel = np.array([[0,0, 1, 0,0],
+                   [0,2, -8, 2,0],
+                   [1,-8,20,-8, 1],
+                   [0,2, -8, 2,0],
+                   [0,0, 1, 0,0]], dtype=np.float32)  # Sharpen kernel
 
 # Read image (grayscale for edge detection/sharpening)
 img = cv2.imread("denoised_ista\denoised_ista_000001.jpeg", cv2.IMREAD_GRAYSCALE)
