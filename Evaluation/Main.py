@@ -1,3 +1,36 @@
+"""
+README (project summary and usage)
+
+This script evaluates image processing results (denoising and edge detection)
+by computing PSNR, SSIM and MSE against a reference image. It iterates over
+several result folders, writes per-image metrics and averages (for denoising
+methods) into `evaluation_results.csv`, and prints folder summaries.
+
+Project structure (relevant paths):
+- input_imgs/: contains reference/source images (e.g. 000001.jpeg)
+- denoised_ista/, denoised_admm/, denoised_fista/: denoised output images
+- edge_images/: edge-detected outputs (evaluated but not averaged)
+- evaluation_results.csv: output CSV with per-image and average metrics
+
+Usage:
+1. Ensure required Python packages are installed (see Dependencies).
+2. Run this script from the repository root:
+     python Evaluation/Main.py
+3. Inspect `evaluation_results.csv` for per-image metrics and averages.
+
+Notes and assumptions:
+- The script expects grayscale images; it reads images with cv2.IMREAD_GRAYSCALE.
+- If result images differ in size from the reference, they will be resized to
+    match the reference dimensions before metric computation.
+- Edge images are evaluated and written to CSV but are excluded from folder
+    averaging because they are not direct denoising outputs.
+- The default reference image is `input_imgs/000001.jpeg`. Change the
+    `reference_path` variable in the script to evaluate a different reference.
+
+Output CSV columns: Method, Image_Name, PSNR, SSIM, MSE
+
+"""
+
 import os
 import cv2
 import numpy as np
